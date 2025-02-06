@@ -80,22 +80,6 @@ function ChatExamples({
         gap: 8,
         justifyContent: "flex-end"
       }}>
-      <Alert>
-        <Terminal className="h-4 w-4" />
-        <AlertTitle>Hello Local World!</AlertTitle>
-        <AlertDescription>
-          You can chat with large language models locally. No internet
-          connection needed.
-        </AlertDescription>
-      </Alert>
-      {examples.map((example, index) => (
-        <div
-          key={index}
-          onClick={() => handleExampleClick(example)}
-          className="text-sm bg-blue-100 rounded-md p-2 cursor-pointer hover:bg-blue-200">
-          {example.display || example.prompt}
-        </div>
-      ))}
     </div>
   )
 }

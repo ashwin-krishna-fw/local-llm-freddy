@@ -13,12 +13,13 @@ window.addEventListener("load", () => {
 
 
 
-const congifMapper = {
-    "https://support.freshdesk.com/a/tickets/*": {
+const configMapper = {
+    // "https://support.freshdesk.com/a/tickets/*": {
       featureName: "Rephase with context",
       prompt: "Rephrase the selected text with context",
-      classNameForContext: ["sentiment-ticket-heading"],
-    }
+      classNameForContext: ["sentiment-ticket-heading","ticket_note"],
+      idNameForContext: ["ticket_original_request"],
+    // }
   }
 
 
@@ -36,12 +37,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return
     }
 
-    console.log('selectedText',selectedText);
+    let data = '';
+
+    configMapper.classNameForContext.forEach((className) => {
+        document.querySelectorAll(`.${className}`).forEach((element) => {
+            data += element.innerText.replace(/\s+/g, " ") // Normalize whitespace
+            .slice(0, 1000) ;
+        });
+    });
+
+    configMapper.idNameForContext.forEach((idName) => {
+        const element = document.getElementById(idName);
+        if (element) {
+            data += element.innerText.replace(/\s+/g, " ") // Normalize whitespace
+            .slice(0, 1000) ;
+        }
+    });
+
+    console.log('data==>',data);
+
  
     // Extract innerText of surrounding elements to provide context
-    const surroundingText = document.body.innerText
-      .replace(/\s+/g, " ") // Normalize whitespace
-      .slice(0, 1000) // Limit length for efficiency
+    const surroundingText = data// Limit length for efficiency
 
     sendResponse({ selectedText, surroundingText })
   }

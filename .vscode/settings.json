@@ -6,5 +6,8 @@
     "eslint.validate": [
         "typescript",
         "typescriptreact"
-    ]
+    ],
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

@@ -49,7 +49,7 @@ function ChangeModelForm() {
           </CardDescription>
         </CardHeader> */}
         <CardContent className="grid gap-6 mt-4">
-          <RadioGroup
+          {/* <RadioGroup
             defaultValue={modelTask}
             value={modelTask}
             className="grid grid-cols-3 gap-4"
@@ -131,7 +131,7 @@ function ChangeModelForm() {
                 Text to Speech
               </Label>
             </div>
-          </RadioGroup>
+          </RadioGroup> */}
           <Accordion type="single" collapsible defaultValue={config.model_id}>
             {availableModels.map((model) => (
               <AccordionItem value={model.model_id} key={model.model_id}>

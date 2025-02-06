@@ -145,32 +145,6 @@ function ChatHeader({
                   Model Registry
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DropdownMenuLabel>Others</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Milestone />
-                Version {version}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  window.open(
-                    "https://github.com/tantara/transformers.js-chrome",
-                    "_blank"
-                  )
-                }>
-                <Logs />
-                Change Logs
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  window.open(
-                    "https://github.com/tantara/transformers.js-chrome",
-                    "_blank"
-                  )
-                }>
-                <Github />
-                Repository
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent>

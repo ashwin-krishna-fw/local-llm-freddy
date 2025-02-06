@@ -8,7 +8,7 @@ function ChromePopup() {
         padding: 8
       }}>
       <div className="container" style={{ width: "100%" }}>
-        <h3>Chat with AI</h3>
+        <h3>What Freddy Thinking </h3>
       </div>
     </div>
   )

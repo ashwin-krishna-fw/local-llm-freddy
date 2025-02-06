@@ -733,7 +733,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 };
 
 const action = actionsMap[info.menuItemId] || "Rewrite";
-
+let sys_prompt = "";
   if (info.menuItemId === "Rephase-selection") {
     console.log('Inside rephase',info);
     // Ask content script to get surrounding text
@@ -748,15 +748,35 @@ const action = actionsMap[info.menuItemId] || "Rewrite";
 
     const { selectedText, surroundingText } = response
 
+    sys_prompt = `
+    You are a precise text rephrasing assistant. Your task is to:
+    Carefully read the input text and provided context ignore unwanted text and rephrase sent which you think neednot be used in rephase for the input text.
+    Rephrase the text to:
+    - Maintain the original meaning
+    - Improve clarity and readability
+    - Adjust tone or style to professional
+    - Preserve key technical or specific terminology
+    Output ONLY the rephrased text
+    - Do not include explanations
+    - Do not repeat the original text
+    - Do not add commentary
+    Constraints:
+    - Preserve core message and intent
+    - Avoid changing core technical or factual information
+    - Handle various text tones: academic, professional, casual, technical
+    `
+
     // Construct a better prompt using extracted context
-    prompt = `${action}: ${info.selectionText} this is the surrounding context: "${surroundingText}" Rephrase and expand the selected text to make it clearer and more detailed.`
+    prompt = `Context: "${surroundingText} \n Input Text: ${info.selectionText} \n "`
   } else {
+    sys_prompt = `You are a precise text ${action}ing assistant.`
     prompt = `${action}: ${info.selectionText}`;
   }
 
   // Perform classification on the selected text
 
   const messages: Message[] = [
+    { role: "system", content: sys_prompt },
     { role: "user", content: prompt },
   ];
 
