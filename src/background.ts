@@ -705,24 +705,64 @@ chrome.runtime.onInstalled.addListener(function () {
     title: 'Summarize "%s"',
     contexts: ["selection"]
   })
+  chrome.contextMenus.create({
+    id: "Rephase-selection",
+    title: 'Rephase Expand "%s"',
+    contexts: ["selection"]
+  })
 })
 
 // Perform inference when the user clicks a context menu
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   // Ignore context menu clicks that are not for classifications (or when there is no input)
+  console.log("info, tab",info, tab);
   if (
     info.menuItemId !== "rewrite-selection" &&
-    info.menuItemId !== "summarize-selection"
+    info.menuItemId !== "summarize-selection" &&
+    info.menuItemId !== "Rephase-selection"
   )
     return
   if (!info.selectionText) return
 
+  let prompt = ''
+
+  if (info.menuItemId === "Rephase-selection") {
+    console.log('Inside rephase',info);
+    // Ask content script to get surrounding text
+    const response = await chrome.tabs.sendMessage(tab.id, {
+      action: "extractInnerText"
+    })
+
+    if (response.error) {
+      console.error(response.error)
+      return
+    }
+
+    const { selectedText, surroundingText } = response
+
+    // Construct a better prompt using extracted context
+    prompt = `Given the following selected text: "${selectedText}"\n\nAnd the surrounding context: "${surroundingText}"\n\nRephrase and expand the selected text to make it clearer and more detailed.`
+  }
+
   // Perform classification on the selected text
-  const action =
-    info.menuItemId === "rewrite-selection" ? "Rewrite" : "Summarize"
+  const actionsMap = {
+    "rewrite-selection": "Rewrite",
+    "Rephrase-selection": "Rephrase",
+    "summarize-selection": "Summarize"
+};
+
+const action = actionsMap[info.menuItemId] || "Rewrite";
+
+  // const messages: Message[] = [
+  //   { role: "user", content: `${action}: ${info.selectionText}` },
+  // ];
+
   const messages: Message[] = [
-    { role: "user", content: `${action}: ${info.selectionText}` }
-  ]
+    { role: "system", content: `You are a rephase expert who can re-write input text into more formal tone. Just return the rephrased text without anything else.` },
+    { role: "user", content: `${action}: ${prompt ? prompt : info.selectionText}` }
+  ];
+
+  console.log('prompt messages',messages)
   // open the side panel
   await chrome.sidePanel.open({ windowId: tab.windowId })
   // wait for the side panel to open
