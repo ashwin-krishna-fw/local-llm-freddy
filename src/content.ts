@@ -13,6 +13,15 @@ window.addEventListener("load", () => {
 
 
 
+const congifMapper = {
+    "https://support.freshdesk.com/a/tickets/*": {
+      featureName: "Rephase with context",
+      prompt: "Rephrase the selected text with context",
+      classNameForContext: ["sentiment-ticket-heading"],
+    }
+  }
+
+
 // export const config: PlasmoCSConfig = {
 //   matches: ["<all_urls>"]
 // }
@@ -26,6 +35,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({ error: "No text selected" })
       return
     }
+
+    console.log('selectedText',selectedText);
  
     // Extract innerText of surrounding elements to provide context
     const surroundingText = document.body.innerText

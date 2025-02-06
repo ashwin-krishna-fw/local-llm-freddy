@@ -1,7 +1,7 @@
 {
   "name": "transformersjs-chrome",
   "displayName": "Freddy AI Assistant: Running LLM locally",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Freddy AI Assistant enables users to interact with language models directly in their browser without an internet connection.",
   "author": "",
   "scripts": {

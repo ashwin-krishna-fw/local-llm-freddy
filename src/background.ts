@@ -726,6 +726,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   let prompt = ''
 
+  const actionsMap = {
+    "rewrite-selection": "Rewrite",
+    "Rephrase-selection": "Rephrase",
+    "summarize-selection": "Summarize"
+};
+
+const action = actionsMap[info.menuItemId] || "Rewrite";
+
   if (info.menuItemId === "Rephase-selection") {
     console.log('Inside rephase',info);
     // Ask content script to get surrounding text
@@ -741,30 +749,20 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const { selectedText, surroundingText } = response
 
     // Construct a better prompt using extracted context
-    prompt = `Given the following selected text: "${selectedText}"\n\nAnd the surrounding context: "${surroundingText}"\n\nRephrase and expand the selected text to make it clearer and more detailed.`
+    prompt = `${action}: ${info.selectionText} this is the surrounding context: "${surroundingText}" Rephrase and expand the selected text to make it clearer and more detailed.`
+  } else {
+    prompt = `${action}: ${info.selectionText}`;
   }
 
   // Perform classification on the selected text
-  const actionsMap = {
-    "rewrite-selection": "Rewrite",
-    "Rephrase-selection": "Rephrase",
-    "summarize-selection": "Summarize"
-};
-
-const action = actionsMap[info.menuItemId] || "Rewrite";
-
-  // const messages: Message[] = [
-  //   { role: "user", content: `${action}: ${info.selectionText}` },
-  // ];
 
   const messages: Message[] = [
-    { role: "system", content: `You are a rephase expert who can re-write input text into more formal tone. Just return the rephrased text without anything else.` },
-    { role: "user", content: `${action}: ${prompt ? prompt : info.selectionText}` }
+    { role: "user", content: prompt },
   ];
 
   console.log('prompt messages',messages)
   // open the side panel
-  await chrome.sidePanel.open({ windowId: tab.windowId })
+  // await chrome.sidePanel.open({ windowId: tab.windowId })
   // wait for the side panel to open
   await new Promise((resolve) => setTimeout(resolve, 500))
   sendToSidePanel({
