@@ -1,8 +1,8 @@
 {
-  "name": "transformersjs-chrome",
-  "displayName": "Freddy AI Assistant: Running LLM locally",
+  "name": "fresh-plugin",
+  "displayName": "FreshPlugin | Freddy AI Assistant",
   "version": "0.0.2",
-  "description": "Freddy AI Assistant enables users to interact with language models directly in their browser without an internet connection.",
+  "description": "FreshPlugin | Freddy AI Assistant enables users to interact with language models directly in their browser without an internet connection.",
   "author": "",
   "scripts": {
     "dev": "pnpm with-env plasmo dev",
